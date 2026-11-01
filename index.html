@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="km" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sokhean & Ramy - Wedding Invitation | អាពាហ៍ពិពាហ៍ សុឃាន និង រ៉ាម៉ី</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:ital,wght@0,100..700;1,100..700&family=Moul&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Canvas Confetti for RSVP celebration -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
+
+    <!-- APP WRITE-->
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@29.0.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@16.0.0/dist/appwrite.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        crimson: {
+                            800: '#8B0000',
+                            900: '#7A0C0C',
+                            DEFAULT: '#9E1B32',
+                            light: '#C42B47'
+                        },
+                        gold: {
+                            light: '#F4E0A5',
+                            DEFAULT: '#D4AF37',
+                            dark: '#AA820A',
+                            metallic: '#C5A059',
+                            bright: '#FFD700'
+                        },
+                        pearl: '#FFFDF9',
+                        cream: '#F8F4E9'
+                    },
+                    fontFamily: {
+                        khmerHeader: ['Moul', 'serif'],
+                        khmerBody: ['Kantumruy Pro', 'sans-serif'],
+                        englishHeader: ['Cinzel', 'Playfair Display', 'serif'],
+                        script: ['Alex Brush', 'cursive'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif']
+                    },
+                    backgroundImage: {
+                        'gold-gradient': 'linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%)',
+                        'crimson-gradient': 'linear-gradient(135deg, #7A0C0C 0%, #9E1B32 50%, #580303 100%)',
+                        'card-glass': 'linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 244, 233, 0.85))'
+                    },
+                    boxShadow: {
+                        'gold': '0 10px 30px -5px rgba(212, 175, 55, 0.3)',
+                        'glow': '0 0 20px rgba(212, 175, 55, 0.5)',
+                        'crimson-shadow': '0 10px 25px -5px rgba(139, 0, 0, 0.3)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body{
+            font-optical-sizing: auto;
+            font-weight: 400;
+            font-style: normal;
+        }
+        /* Custom Keyframe Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(3deg); }
+        }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
+            50% { box-shadow: 0 0 30px rgba(212, 175, 55, 0.8); }
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        .animate-pulse-glow { animation: pulseGlow 3s infinite; }
+        
+        .gold-text-gradient {
+            background: linear-gradient(135deg, #B38728 0%, #FBF5B7 35%, #D4AF37 60%, #AA771C 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gold-border {
+            border-image: linear-gradient(to bottom right, #BF953F, #FCF6BA, #B38728, #AA771C) 1;
+        }
+
+        /* Gold Foil Border Box Utility */
+        .gold-frame {
+            position: relative;
+            background: #FFFDF9;
+        }
+        .gold-frame::before {
+            content: '';
+            position: absolute;
+            top: 4px; left: 4px; right: 4px; bottom: 4px;
+            border: 1px solid rgba(212, 175, 55, 0.5);
+            pointer-events: none;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F8F4E9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #C5A059;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8B0000;
+        }
+
+        /* Particle Canvas Overlay */
+        #particleCanvas {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Khmer Motif Corner Decorative Borders */
+        .kbach-corner {
+            width: 32px;
+            height: 32px;
+            position: absolute;
+            background-size: contain;
+            background-repeat: no-repeat;
+            opacity: 0.75;
+        }
+    </style>
+</head>
+<body class="bg-crimson-900 font-khmerBody text-pearl antialiased overflow-x-hidden selection:bg-gold-light selection:text-crimson-900">
+
+    <!-- FLOATING CONTROLS (BOTTOM-RIGHT) -->
+    <div class="fixed bottom-6 right-6 z-50 flex flex-col items-center gap-3">
+        <!-- Language Switcher Floating Pill -->
+        <button onclick="toggleLanguage()" class="px-3.5 py-2 rounded-full bg-crimson/95 text-gold border-2 border-gold/70 text-xs font-semibold hover:bg-crimson-900 transition-all flex items-center gap-1.5 shadow-gold hover:scale-105 backdrop-blur-md">
+            <i class="fas fa-globe text-xs"></i>
+            <span id="langLabel">EN</span>
+        </button>
+
+        <!-- Audio Floating Toggle Button -->
+        <button id="musicToggleBtn" onclick="toggleAudio()" class="w-12 h-12 rounded-full bg-gradient-to-r from-crimson-900 to-crimson text-gold border-2 border-gold flex items-center justify-center shadow-gold hover:shadow-glow hover:scale-110 transition-all backdrop-blur-md" title="Toggle Music">
+            <i id="musicIcon" class="fas fa-music text-base animate-pulse"></i>
+        </button>
+    </div>
+
+    <!-- Background Audio Element (Web Audio API Synthesizer fallback included in JS) -->
+    <audio id="weddingAudio" loop preload="auto">
+        <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=traditional-asian-romantic-112199.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- SECTION 1: HERO & HEADER SECTION -->
+    <section id="hero" class="relative min-h-screen flex items-center justify-center py-20 px-4 overflow-hidden bg-cover bg-center bg-no-repeat bg-fixed" style="background-image: linear-gradient(rgba(26, 3, 3, 0.72), rgba(60, 5, 12, 0.85)), url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1920&q=80');">
+        <!-- Floating Particle Canvas Background -->
+        <canvas id="particleCanvas"></canvas>
+
+        <!-- Traditional Khmer Lotus Background Pattern Overlay -->
+        <div class="absolute inset-0 opacity-[0.05] pointer-events-none bg-repeat" style="background-image: url('data:image/svg+xml;utf8,<svg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M30 0 C35 15, 45 25, 60 30 C45 35, 35 45, 30 60 C25 45, 15 35, 0 30 C15 25, 25 15, 30 0 Z\" fill=\"%20FFD700\"/></svg>');"></div>
+
+        <div class="relative z-20 max-w-4xl mx-auto px-4 text-center">
+            
+            <!-- Traditional Khmer Blessing Header Badge -->
+            <div class="">
+                <p class="font-khmerHeader text-gold-light text-xs sm:text-sm tracking-wide ">
+                    <span class="lang-km">សិរីមង្គលអាពាហ៍ពិពាហ៍ ប្រកបដោយក្ដីសុខ</span>
+                    <span class="lang-en hidden">Solemnization of Holy Matrimony</span>
+                </p>
+            </div>
+
+            <!-- Khmer Decorative Top Ornament SVG -->
+            <div class="flex justify-center items-center my-2 text-gold">
+                <!-- <svg class="w-48 sm:w-64 h-auto" viewBox="0 0 200 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M100 0C105 10 115 15 130 15C115 15 105 20 100 30C95 20 85 15 70 15C85 15 95 10 100 0Z" fill="currentColor"/>
+                    <line x1="0" y1="15" x2="65" y2="15" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 2"/>
+                    <line x1="135" y1="15" x2="200" y2="15" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 2"/>
+                    <circle cx="100" cy="15" r="3" fill="#FFD700"/>
+                </svg> -->
+                <dotlottie-player 
+                    src="./Lotties/Ornament Animation.json" 
+                    background="transparent" 
+                    speed="0.5"
+                    style="height: 100px; margin-top: -20px; margin-bottom: -20px;""
+                    autoplay>
+                </dotlottie-player>
+            </div>
+
+            <!-- Invitation Announcement -->
+            <p class="text-pearl/90 font-khmerBody text-sm sm:text-base mb-2 italic drop-shadow-md">
+                <span class="lang-km">យើងខ្ញុំមានកិត្តិយសសូមគោរពអញ្ជើញ ឯកឧត្តម លោកជំទាវ លោក លោកស្រី អ្នកនាងកញ្ញា ចូលរួមពិធីអាពាហ៍ពិពាហ៍</span>
+                <span class="lang-en hidden">Together with their families, invite you to celebrate the wedding of</span>
+            </p>
+
+            <!-- Couples Names -->
+            <div class="my-6 space-y-2">
+                <!-- Groom Name -->
+                <div class="px-4">
+                    <h1 class="text-3xl sm:text-5xl md:text-6xl font-khmerHeader gold-text-gradient tracking-wide drop-shadow-lg">
+                        <span class="lang-km inline-block my-2 md:my-5">ឈីន​ សុឃាន</span>
+                        <span class="lang-en hidden font-englishHeader font-bold">CHHIN SOKHEAN</span>
+                    </h1>
+                    <p class="text-xs sm:text-sm text-gold-light font-medium uppercase tracking-widest mt-1">
+                        <span class="lang-km">កូនប្រុស</span><span class="lang-en hidden">The Groom</span>
+                    </p>
+                </div>
+
+                <!-- Heart / Traditional Ampersand Divider -->
+                <div class="my-2 flex items-center justify-center gap-3 text-gold">
+                    <span class="h-px w-12 bg-gradient-to-r from-transparent to-gold"></span>
+                    <div class="w-10 h-10 rounded-full bg-crimson-900/80 border-2 border-gold flex items-center justify-center shadow-lg backdrop-blur-sm">
+                        <i class="fas fa-heart text-gold-bright text-sm animate-pulse"></i>
+                    </div>
+                    <span class="h-px w-12 bg-gradient-to-l from-transparent to-gold"></span>
+                </div>
+
+                <!-- Bride Name -->
+                <div class="inline-block px-4">
+                    <h1 class="text-3xl sm:text-5xl md:text-6xl font-khmerHeader gold-text-gradient tracking-wide drop-shadow-lg">
+                        <span class="lang-km  inline-block my-2 md:my-5">តូ រ៉ាម៉ី</span>
+                        <span class="lang-en hidden font-englishHeader font-bold">TO RAMY</span>
+                    </h1>
+                    <p class="text-xs sm:text-sm text-gold-light font-medium uppercase tracking-widest mt-1">
+                        <span class="lang-km">កូនស្រី</span><span class="lang-en hidden">The Bride</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Traditional Khmer Calendar Details Frame -->
+            <div class="max-w-xl mx-auto my-6 p-4 rounded-2xl bg-black/50 backdrop-blur-md border border-gold/60 shadow-2xl relative overflow-hidden">
+                <div class="absolute -top-6 -right-6 w-16 h-16 bg-gold/20 rounded-full"></div>
+                <div class="text-center space-y-1 text-xs sm:text-sm text-pearl">
+                    <p class="font-semibold text-gold-light font-khmerHeader">
+                        <span class="lang-km">ថ្ងៃអង្គារ ១៤រោច ខែកត្តិក ឆ្នាំមមី​ អដ្ឋស័ក ព.ស. ២៥៧០</span>
+                        <span class="lang-en hidden">Tuesday, 14th Roach, month of Kadhek, Year of Horse, B.E. 2570</span>
+                    </p>
+                    <p class="text-base sm:text-xl font-bold text-white font-englishHeader tracking-wider text-gold-bright">
+                        08 . DECEMBER . 2026
+                    </p>
+                    <p class="text-xs text-pearl/80">
+                        <i class="fas fa-map-marker-alt text-gold-bright mr-1"></i>
+                        <span class="lang-km">គេហដ្ឋានខាងកូនស្រី, ខេត្តកំពង់ចាម</span>
+                        <span class="lang-en hidden">Bride's Residence, Kampong Cham Province</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Live Dynamic Countdown Timer -->
+            <div class="my-8">
+                <p class="text-xs font-semibold text-gold-light uppercase tracking-widest mb-3 drop-shadow-md">
+                    <span class="lang-km">រាប់ថយក្រោយដល់ថ្ងៃសិរីមង្គល</span>
+                    <span class="lang-en hidden">Counting Down to the Big Day</span>
+                </p>
+                <div class="grid grid-cols-4 gap-2 sm:gap-4 max-w-lg mx-auto">
+                    <div class="bg-black/60 backdrop-blur-md text-pearl p-3 sm:p-4 rounded-xl border border-gold/70 shadow-lg">
+                        <span id="cd-days" class="block text-2xl sm:text-4xl font-bold font-englishHeader text-gold-bright">00</span>
+                        <span class="text-[10px] sm:text-xs uppercase tracking-wider text-pearl/80">
+                            <span class="lang-km">ថ្ងៃ</span><span class="lang-en hidden">Days</span>
+                        </span>
+                    </div>
+                    <div class="bg-black/60 backdrop-blur-md text-pearl p-3 sm:p-4 rounded-xl border border-gold/70 shadow-lg">
+                        <span id="cd-hours" class="block text-2xl sm:text-4xl font-bold font-englishHeader text-gold-bright">00</span>
+                        <span class="text-[10px] sm:text-xs uppercase tracking-wider text-pearl/80">
+                            <span class="lang-km">ម៉ោង</span><span class="lang-en hidden">Hours</span>
+                        </span>
+                    </div>
+                    <div class="bg-black/60 backdrop-blur-md text-pearl p-3 sm:p-4 rounded-xl border border-gold/70 shadow-lg">
+                        <span id="cd-minutes" class="block text-2xl sm:text-4xl font-bold font-englishHeader text-gold-bright">00</span>
+                        <span class="text-[10px] sm:text-xs uppercase tracking-wider text-pearl/80">
+                            <span class="lang-km">នាទី</span><span class="lang-en hidden">Mins</span>
+                        </span>
+                    </div>
+                    <div class="bg-black/60 backdrop-blur-md text-pearl p-3 sm:p-4 rounded-xl border border-gold/70 shadow-lg">
+                        <span id="cd-seconds" class="block text-2xl sm:text-4xl font-bold font-englishHeader text-gold-bright">00</span>
+                        <span class="text-[10px] sm:text-xs uppercase tracking-wider text-pearl/80">
+                            <span class="lang-km">វិនាទី</span><span class="lang-en hidden">Secs</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scroll Indicator Arrow -->
+            <div class="mt-10 animate-bounce">
+                <a href="#story" class="text-gold-light hover:text-white transition-colors text-xs font-semibold flex flex-col items-center gap-1 drop-shadow-md">
+                    <span class="lang-km">អូសទៅខាងក្រោម</span>
+                    <span class="lang-en hidden">Scroll Down</span>
+                    <i class="fas fa-chevron-down text-sm"></i>
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION 2: PARENTS & HONORABLE BLESSING SECTION -->
+    <section class="py-12 bg-gradient-to-b from-[#2B0407] via-[#1F0305] to-[#2B0407] border-y border-gold/30 relative">
+        <div class="max-w-5xl mx-auto px-4">
+            <div class="text-center mb-8">
+                <h3 class="font-khmerHeader text-lg sm:text-xl gold-text-gradient">
+                    <span class="lang-km inline-block mt-2">មាតាបិតាទាំងសងខាង</span>
+                    <span class="lang-en hidden">Parents of the Couple</span>
+                </h3>
+                <div class="w-16 h-0.5 bg-gold mx-auto mt-2"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-center">
+                <!-- Groom's Parents -->
+                <div class="p-6 rounded-2xl bg-black/40 backdrop-blur-md border border-gold/40 shadow-gold relative">
+                    <div class="w-12 h-12 mx-auto mb-3 rounded-full bg-gold/15 border border-gold/50 flex items-center justify-center text-gold-bright">
+                        <i class="fas fa-users text-lg"></i>
+                    </div>
+                    <h4 class="text-xs font-semibold text-gold-light uppercase tracking-wider mb-2">
+                        <span class="lang-km">ខាងកូនប្រុស</span><span class="lang-en hidden">Groom's Parents</span>
+                    </h4>
+                    <p class="font-semibold text-pearl text-base">លោកស្រី ឈីន សុខឃី</p>
+                    <p class="text-xs text-gold-light/80 mt-1">Mrs. Chhin Sokhy</p>
+                </div>
+
+                <!-- Bride's Parents -->
+                <div class="p-6 rounded-2xl bg-black/40 backdrop-blur-md border border-gold/40 shadow-gold relative">
+                    <div class="w-12 h-12 mx-auto mb-3 rounded-full bg-gold/15 border border-gold/50 flex items-center justify-center text-gold-bright">
+                        <i class="fas fa-users text-lg"></i>
+                    </div>
+                    <h4 class="text-xs font-semibold text-gold-light uppercase tracking-wider mb-2">
+                        <span class="lang-km">ខាងកូនស្រី</span><span class="lang-en hidden">Bride's Parents</span>
+                    </h4>
+                    <p class="font-semibold text-pearl text-base">លោក រឿន​ តូ & លោកស្រី សុខ បូផា</p>
+                    <p class="text-xs text-gold-light/80 mt-1">Mr. Roeun To & Mrs. Sok Bopha</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: OUR STORY TIMELINE -->
+    <!-- <section id="story" class="py-16 bg-gradient-to-b from-[#1F0305] via-[#3B070B] to-[#1F0305] relative">
+        <div class="max-w-4xl mx-auto px-4"> -->
+            <!-- Section Title -->
+            <!-- <div class="text-center mb-12">
+                <span class="text-xs font-semibold uppercase tracking-widest text-gold-light">Love Story</span>
+                <h2 class="font-khmerHeader text-2xl sm:text-3xl gold-text-gradient mt-1">
+                    <span class="lang-km inline-block mt-2">រឿងរ៉ាវស្នេហារបស់យើង</span>
+                    <span class="lang-en hidden">How Our Journey Began</span>
+                </h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-transparent via-gold to-transparent mx-auto mt-3"></div>
+            </div> -->
+
+            <!-- Vertical Timeline -->
+            <!-- <div class="relative border-l-2 border-gold/50 ml-4 md:ml-1/2 space-y-12"> -->
+                
+                <!-- Event 1 -->
+                <!-- <div class="relative pl-8 md:pl-0 group">
+                    <div class="absolute -left-[17px] top-0 w-8 h-8 rounded-full bg-crimson border-2 border-gold flex items-center justify-center text-gold text-xs shadow-md">
+                        <i class="fas fa-coffee"></i>
+                    </div>
+                    <div class="md:w-5/12 md:ml-auto md:pl-8">
+                        <div class="p-5 rounded-xl bg-black/50 backdrop-blur-md border border-gold/40 shadow-lg hover:border-gold transition-colors">
+                            <span class="text-xs font-bold text-gold-bright">October 2021</span>
+                            <h3 class="font-khmerHeader text-base text-gold-light mt-1">
+                                <span class="lang-km">ជំនួបដំបូង</span>
+                                <span class="lang-en hidden">First Met</span>
+                            </h3>
+                            <p class="text-xs sm:text-sm text-pearl/90 mt-2 leading-relaxed">
+                                <span class="lang-km">យើងបានជួបគ្នាតាមរយៈការណែនាំរបស់មិត្តភក្ដិនៅហាងកាហ្វេមួយកន្លែងក្នុងក្រុងភ្នំពេញ។ ស្នាមញញឹមដ៏ស្រស់ស្រាយរបស់នាងបានឆក់យកបេះដូងខ្ញុំតាំងពីពេលនោះមក។</span>
+                                <span class="lang-en hidden">We crossed paths at a cozy café in Phnom Penh through mutual friends. A warm smile sparked a connection that grew deeper every single day.</span>
+                            </p>
+                        </div>
+                    </div>
+                </div> -->
+
+                <!-- Event 2 -->
+                <!-- <div class="relative pl-8 md:pl-0 group">
+                    <div class="absolute -left-[17px] top-0 w-8 h-8 rounded-full bg-crimson border-2 border-gold flex items-center justify-center text-gold text-xs shadow-md">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="md:w-5/12 md:mr-auto md:text-right md:pr-8">
+                        <div class="p-5 rounded-xl bg-black/50 backdrop-blur-md border border-gold/40 shadow-lg hover:border-gold transition-colors">
+                            <span class="text-xs font-bold text-gold-bright">February 2023</span>
+                            <h3 class="font-khmerHeader text-base text-gold-light mt-1">
+                                <span class="lang-km">ការយល់ចិត្តគ្នា</span>
+                                <span class="lang-en hidden">First Date & Trip</span>
+                            </h3>
+                            <p class="text-xs sm:text-sm text-pearl/90 mt-2 leading-relaxed">
+                                <span class="lang-km">ដំណើរកម្សាន្តដំបូងទៅកាន់ខេត្តសៀមរាប។ ការដើរទស្សនាតាមប្រាសាទបុរាណ និងការផ្លាស់ប្តូរការយល់ចិត្តគ្នា បានធ្វើឲ្យយើងដឹងថាយើងកើតមកសម្រាប់គ្នា។</span>
+                                <span class="lang-en hidden">A unforgettable trip to Siem Reap. Exploring ancient temples together made us realize we were meant for each other.</span>
+                            </p>
+                        </div>
+                    </div>
+                </div> -->
+
+                <!-- Event 3 -->
+                <!-- <div class="relative pl-8 md:pl-0 group">
+                    <div class="absolute -left-[17px] top-0 w-8 h-8 rounded-full bg-crimson border-2 border-gold flex items-center justify-center text-gold text-xs shadow-md">
+                        <i class="fas fa-ring"></i>
+                    </div>
+                    <div class="md:w-5/12 md:ml-auto md:pl-8">
+                        <div class="p-5 rounded-xl bg-black/50 backdrop-blur-md border border-gold/40 shadow-lg hover:border-gold transition-colors">
+                            <span class="text-xs font-bold text-gold-bright">December 2025</span>
+                            <h3 class="font-khmerHeader text-base text-gold-light mt-1">
+                                <span class="lang-km">ការសុំរៀបការ</span>
+                                <span class="lang-en hidden">The Proposal</span>
+                            </h3>
+                            <p class="text-xs sm:text-sm text-pearl/90 mt-2 leading-relaxed">
+                                <span class="lang-km">នៅក្រោមពន្លឺព្រះចន្ទយ៉ាងរ៉ូមែនទិក សុភ័ក្ត បានលុតជង្គង់សុំ ចន្ទ្រា រៀបការ រួមដំណើរជីវិតជាមួយគ្នារហូតតទៅ។</span>
+                                <span class="lang-en hidden">Under a starlit night in Kep, Sophea got down on one knee and asked the most beautiful question with a resounding 'Yes!'.</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>  -->
+
+    <!-- SECTION 4: EVENT SCHEDULE -->
+    <section id="schedule" class="py-16 bg-gradient-to-b from-[#1F0305] via-[#2A0407] to-[#1F0305] relative border-t border-gold/20">
+        <div class="max-w-5xl mx-auto px-4">
+            <div class="text-center mb-12">
+                <span class="text-xs font-semibold uppercase tracking-widest text-gold-light">Program & Timeline</span>
+                <h2 class="font-khmerHeader text-2xl sm:text-3xl gold-text-gradient mt-1">
+                    <span class="lang-km inline-block mt-2">កម្មវិធីសិរីមង្គលអាពាហ៍ពិពាហ៍</span>
+                    <span class="lang-en hidden">Official Wedding Ceremony Schedule</span>
+                </h2>
+                <p class="text-xs text-pearl/80 mt-2">
+                    <span class="lang-km">ថ្ងៃអាទិត្យ ទី០៨ ខែធ្នូ ឆ្នាំ២០២៦</span>
+                    <span class="lang-en hidden">Sunday, December 08, 2026</span>
+                </p>
+                <div class="w-24 h-1 bg-gradient-to-r from-transparent via-gold to-transparent mx-auto mt-3"></div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                <!-- Morning Traditional Ceremonies Card -->
+                <div class="bg-black/50 backdrop-blur-md rounded-2xl p-6 sm:p-8 border-2 border-gold/50 shadow-gold relative overflow-hidden flex flex-col justify-between">
+                    <div class="absolute top-0 right-0 bg-gold text-crimson-900 px-4 py-1 rounded-bl-xl font-bold text-xs uppercase tracking-wider">
+                        <span class="lang-km">ពិធីពេលព្រឹក</span><span class="lang-en hidden">Morning Ceremony</span>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-12 h-12 rounded-full bg-gold/20 border border-gold text-gold-bright flex items-center justify-center text-xl shadow-md">
+                                <i class="fas fa-sun"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-khmerHeader text-lg text-gold-light">
+                                    <span class="lang-km">ពិធីតាមប្រពៃណីខ្មែរ</span>
+                                    <span class="lang-en hidden">Traditional Khmer Rites</span>
+                                </h3>
+                                <p class="text-xs text-gold-bright/90">At Residence & Ceremony Hall</p>
+                            </div>
+                        </div>
+
+                        <ul class="space-y-4 border-l border-gold/40 pl-4 text-xs sm:text-sm">
+                            <li class="relative">
+                                <span class="absolute -left-[21px] top-1.5 w-2.5 h-2.5 rounded-full bg-gold-bright"></span>
+                                <span class="font-bold text-gold-bright">07:00 AM</span> — 
+                                <span class="font-semibold text-pearl">ពិធីហែជំនូន (Hai Neak Ta / Procession)</span>
+                                <p class="text-pearl/70 text-[11px] mt-0.5">Groom's traditional gift procession & welcoming of elders.</p>
+                            </li>
+                            <li class="relative">
+                                <span class="absolute -left-[21px] top-1.5 w-2.5 h-2.5 rounded-full bg-gold-bright"></span>
+                                <span class="font-bold text-gold-bright">08:30 AM</span> — 
+                                <span class="font-semibold text-pearl">ពិធីកាត់សក់បង្កក់សិរី (Hair Cutting Ceremony)</span>
+                                <p class="text-pearl/70 text-[11px] mt-0.5">Symbolic hair cutting for blessings & cleansing of past.</p>
+                            </li>
+                            <li class="relative">
+                                <span class="absolute -left-[21px] top-1.5 w-2.5 h-2.5 rounded-full bg-gold-bright"></span>
+                                <span class="font-bold text-gold-bright">10:00 AM</span> — 
+                                <span class="font-semibold text-pearl">ពិធីសំពះផ្ទឹម និងចងដៃ (Solemn Binding Ceremony)</span>
+                                <p class="text-pearl/70 text-[11px] mt-0.5">Tying red silk threads for everlasting blessing and unity.</p>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-gold/20 text-center text-xs text-gold-light/80 italic">
+                        <i class="fas fa-info-circle text-gold-bright mr-1"></i>
+                        <span class="lang-km">សូមអញ្ជើញរៀបចំសម្លៀកបំពាក់តាមប្រពៃណីខ្មែរ</span>
+                        <span class="lang-en hidden">Traditional Khmer attire recommended</span>
+                    </div>
+                </div>
+
+                <!-- Evening Gala Reception Card -->
+                <div class="bg-black/50 backdrop-blur-md rounded-2xl p-6 sm:p-8 border-2 border-gold/50 shadow-gold relative overflow-hidden flex flex-col justify-between">
+                    <div class="absolute top-0 right-0 bg-crimson-light text-pearl border-b border-l border-gold/50 px-4 py-1 rounded-bl-xl font-bold text-xs uppercase tracking-wider">
+                        <span class="lang-km">ពិធីលៀងសាយភោជន</span><span class="lang-en hidden">Evening Gala</span>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-12 h-12 rounded-full bg-gold/20 border border-gold text-gold-bright flex items-center justify-center text-xl shadow-md">
+                                <i class="fas fa-glass-cheers"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-khmerHeader text-lg text-gold-light">
+                                    <span class="lang-km">ពិធីពិសាភោជន និងរាំកម្សាន្ត</span>
+                                    <span class="lang-en hidden">Dinner Reception & Celebration</span>
+                                </h3>
+                                <p class="text-xs text-gold-bright/90">Grand Ballroom, Koh Pich</p>
+                            </div>
+                        </div>
+
+                        <ul class="space-y-4 border-l border-gold/40 pl-4 text-xs sm:text-sm">
+                            <li class="relative">
+                                <span class="absolute -left-[21px] top-1.5 w-2.5 h-2.5 rounded-full bg-gold-bright"></span>
+                                <span class="font-bold text-gold-bright">05:00 PM</span> — 
+                                <span class="font-semibold text-pearl">ទទួលភ្ញៀវកិត្តិយស (Guest Welcoming & Photos)</span>
+                                <p class="text-pearl/70 text-[11px] mt-0.5">Welcome cocktail & photobooth session with couple.</p>
+                            </li>
+                            <li class="relative">
+                                <span class="absolute -left-[21px] top-1.5 w-2.5 h-2.5 rounded-full bg-gold-bright"></span>
+                                <span class="font-bold text-gold-bright">06:30 PM</span> — 
+                                <span class="font-semibold text-pearl">ពិធីពិសាអាហារពេលល្ងាច (Gala Dinner Commences)</span>
+                                <p class="text-pearl/70 text-[11px] mt-0.5">Fine Khmer fusion multi-course banquet served.</p>
+                            </li>
+                            <li class="relative">
+                                <span class="absolute -left-[21px] top-1.5 w-2.5 h-2.5 rounded-full bg-gold-bright"></span>
+                                <span class="font-bold text-gold-bright">08:00 PM</span> — 
+                                <span class="font-semibold text-pearl">កាត់នំ និងរាំកម្សាន្ត (Cake Cutting & Dance)</span>
+                                <p class="text-pearl/70 text-[11px] mt-0.5">First dance, toast, and live musical performance.</p>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-gold/20 text-center text-xs text-gold-light/80 italic">
+                        <i class="fas fa-user-tie text-gold-bright mr-1"></i>
+                        <span class="lang-km">សម្លៀកបំពាក់៖ ឈុតប្រណីត / Evening Formal</span>
+                        <span class="lang-en hidden">Dress Code: Formal / Evening Wear</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 5: VENUE & MAP LOCATION -->
+    <section id="location" class="py-16 bg-gradient-to-b from-[#1F0305] via-[#3B070B] to-[#1F0305] relative">
+        <div class="max-w-5xl mx-auto px-4">
+            <div class="text-center mb-10">
+                <span class="text-xs font-semibold uppercase tracking-widest text-gold-light">Venue Details</span>
+                <h2 class="font-khmerHeader text-2xl sm:text-3xl gold-text-gradient mt-1">
+                    <span class="lang-km  inline-block mt-2">ទីតាំងប្រារព្ធពិធី</span>
+                    <span class="lang-en hidden">Wedding Venue & Map</span>
+                </h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-transparent via-gold to-transparent mx-auto mt-3"></div>
+            </div>
+
+            <div class="bg-black/50 backdrop-blur-md rounded-2xl border border-gold/50 shadow-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-3">
+                <!-- Venue Text Info -->
+                <div class="p-6 sm:p-8 flex flex-col justify-between space-y-6">
+                    <div>
+                        <div class="inline-flex items-center gap-2 text-gold-bright font-semibold text-xs uppercase tracking-wider mb-2">
+                            <i class="fas fa-map-marker-alt"></i>Venue Location
+                        </div>
+                        <h3 class="font-khmerHeader text-xl text-gold-light">
+                            <span class="lang-km">គេហដ្ឋានខាងកូនស្រី</span>
+                            <span class="lang-en hidden">Bride’s Residence</span>
+                        </h3>
+                        <p class="text-xs text-pearl/80 mt-3 leading-relaxed">
+                            <span class="lang-km">ឃុំហាន់ជ័យ ស្រុកកំពង់សៀម ខេត្តកំពង់ចាម។ មានចំណតរថយន្តធំទូលាយ និងបរិយាកាសធម្មជាតិ។</span>
+                            <span class="lang-en hidden">Koh Pich Exhibition Center (Building L), Tonle Bassac, Chamkarmon, Phnom Penh, Cambodia.</span>
+                        </p>
+                    </div>
+
+                    <div class="space-y-3 text-xs">
+                        <div class="flex items-center gap-3 text-pearl/90">
+                            <i class="fas fa-parking text-gold-bright text-base w-5 text-center"></i>
+                            <span>Free Parking Available</span>
+                        </div>
+                        <div class="flex items-center gap-3 text-pearl/90">
+                            <i class="fas fa-phone-alt text-gold-bright text-base w-5 text-center"></i>
+                            <span>Contact: +855 11 434 093</span>
+                        </div>
+                    </div>
+
+                    <!-- Direct Directions Button -->
+                    <a href="https://maps.app.goo.gl/NodwDD9zg9V78r2u7" target="_blank" rel="noopener noreferrer" class="w-full py-3 rounded-xl bg-gold-gradient text-crimson-900 font-bold text-xs text-center shadow-gold hover:scale-105 transition-all flex items-center justify-center gap-2">
+                        <i class="fas fa-directions text-sm"></i>
+                        <span class="lang-km">បើក Google Maps នាំផ្លូវ</span>
+                        <span class="lang-en hidden">Get Directions on Google Maps</span>
+                    </a>
+                </div>
+
+                <!-- Embedded Interactive Google Map -->
+                <div class="lg:col-span-2 h-72 lg:h-auto min-h-[300px] relative bg-gray-900 border-l border-gold/30">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1333.1737422964761!2d105.52590112853777!3d12.147316799252977!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x310c45a5c91a3efb%3A0xe8c25c94cf5cf283!2z4Z6P4Z68IOGemuGfieGetuGemOGfieGeuA!5e1!3m2!1skm!2skh!4v1793413835463!5m2!1skm!2skh" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 6: RSVP & BLESSING WALL -->
+    <section id="rsvp" class="py-16 bg-gradient-to-b from-[#1F0305] via-[#2A0407] to-[#1F0305] relative">
+        <div class="max-w-5xl mx-auto px-4">
+            <div class="text-center mb-10">
+                <span class="text-xs font-semibold uppercase tracking-widest text-gold-light">Confirmation & Wishes</span>
+                <h2 class="font-khmerHeader text-2xl sm:text-3xl gold-text-gradient mt-1">
+                    <span class="lang-km inline-block mt-2">បញ្ជាក់វត្តមាន & ជូនពរ</span>
+                    <span class="lang-en hidden">RSVP & Blessing Wishes</span>
+                </h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-transparent via-gold to-transparent mx-auto mt-3"></div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                
+                <!-- Interactive RSVP Form Card -->
+                <div class="lg:col-span-5 bg-black/50 backdrop-blur-md p-6 sm:p-8 rounded-2xl border-2 border-gold/50 shadow-gold relative">
+                    <h3 class="font-khmerHeader text-base text-gold-light mb-4 flex items-center gap-2">
+                        <i class="fas fa-pen-nib text-gold-bright"></i>
+                        <span class="lang-km">តារាងបញ្ជាក់ការចូលរួម</span>
+                        <span class="lang-en hidden">RSVP Form</span>
+                    </h3>
+
+                    <form id="rsvpForm" onsubmit="handleRSVPSubmit(event)" class="space-y-4 text-xs sm:text-sm">
+                        <div>
+                            <label class="block text-gold-light font-semibold mb-1">
+                                <span class="lang-km">ឈ្មោះពេញរបស់អ្នក *</span>
+                                <span class="lang-en hidden">Your Full Name *</span>
+                            </label>
+                            <input type="text" id="guestName" required placeholder="ឧ. លោក សុខ ជា / Sok Chea" class="w-full px-4 py-2.5 rounded-lg border border-gold/40 focus:border-gold-bright focus:ring-1 focus:ring-gold-bright outline-none bg-black/40 text-pearl placeholder-pearl/40">
+                        </div>
+
+                        <div>
+                            <label class="block text-gold-light font-semibold mb-1">
+                                <span class="lang-km">តើលោកអ្នកអាចចូលរួមបានទេ? *</span>
+                                <span class="lang-en hidden">Will you attend? *</span>
+                            </label>
+                            <select id="attendance" class="w-full px-4 py-2.5 rounded-lg border border-gold/40 focus:border-gold-bright focus:ring-1 focus:ring-gold-bright outline-none bg-black/80 text-pearl">
+                                <option value="Yes">ចូលរួមដោយក្តីរីករាយ (Definitely Attending)</option>
+                                <option value="Regret">សូមអភ័យទោស មិនអាចចូលរួមបាន (Regretfully Declining)</option>
+                            </select>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-gold-light font-semibold mb-1">
+                                    <span class="lang-km">ចំនួនភ្ញៀវ</span>
+                                    <span class="lang-en hidden">Number of Guests</span>
+                                </label>
+                                <select id="guestCount" class="w-full px-4 py-2.5 rounded-lg border border-gold/40 focus:border-gold-bright focus:ring-1 focus:ring-gold-bright outline-none bg-black/80 text-pearl">
+                                    <option value="1">1 Person</option>
+                                    <option value="2">2 Persons</option>
+                                    <option value="3">3 Persons</option>
+                                    <option value="4">4+ Persons</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-gold-light font-semibold mb-1">
+                                    <span class="lang-km">កម្មវិធីចូលរួម</span>
+                                    <span class="lang-en hidden">Session</span>
+                                </label>
+                                <select id="sessionType" class="w-full px-4 py-2.5 rounded-lg border border-gold/40 focus:border-gold-bright focus:ring-1 focus:ring-gold-bright outline-none bg-black/80 text-pearl">
+                                    <option value="E">លៀងសាយភោជន (Evening)</option>
+                                    <option value="M">ពិធីព្រឹក (Morning)</option>
+                                    <option value="B">ទាំងពីរ (Both Sessions)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-gold-light font-semibold mb-1">
+                                <span class="lang-km">សារជូនពរកូនក្រមុំ និងកូនកម្លោះ</span>
+                                <span class="lang-en hidden">Heartfelt Blessings/Wishes</span>
+                            </label>
+                            <textarea id="blessingMsg" rows="3" required placeholder="សូមជូនពរកូនប្រុសកូនស្រី មានសុភមង្គល..." class="w-full px-4 py-2.5 rounded-lg border border-gold/40 focus:border-gold-bright focus:ring-1 focus:ring-gold-bright outline-none bg-black/40 text-pearl placeholder-pearl/40 resize-none"></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full py-3 rounded-xl bg-gold-gradient text-crimson-900 font-bold text-sm shadow-gold hover:shadow-glow transition-all">
+                            <span class="lang-km">ផ្ញើសារជូនពរ & បញ្ជាក់</span>
+                            <span class="lang-en hidden">Send Wishes & Confirm</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Live Blessing Wall Board -->
+                <div class="lg:col-span-7 bg-black/50 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-gold/40 shadow-2xl flex flex-col h-full min-h-[420px]">
+                    <div class="flex items-center justify-between mb-4 pb-2 border-b border-gold/30">
+                        <h3 class="font-khmerHeader text-base text-gold-light flex items-center gap-2">
+                            <i class="fas fa-comments text-gold-bright"></i>
+                            <span class="lang-km">ជញ្ជាំងសារជូនពរ</span>
+                            <span class="lang-en hidden">Guest Blessing Board</span>
+                        </h3>
+                        <span class="text-xs text-gold-bright font-semibold bg-black/60 px-3 py-1 rounded-full border border-gold/40" id="wishCount">3 Wishes</span>
+                    </div>
+
+                    <!-- Scrollable Wishes List -->
+                    <div id="blessingsContainer" class="space-y-3 overflow-y-auto max-h-[350px] pr-2 flex-grow">
+                        <!-- Default Mock Messages -->
+                        <div class="p-4 rounded-xl bg-black/40 border border-gold/30 relative">
+                            <div class="flex justify-between items-start">
+                                <h4 class="font-bold text-gold-bright text-xs sm:text-sm">លោកជំទាវ សុខ គឹមហៀង</h4>
+                                <span class="text-[10px] text-pearl/50">Just now</span>
+                            </div>
+                            <p class="text-xs text-pearl/90 mt-1 italic">"សូមជូនពរឱ្យកូនទាំងពីរមានសុភមង្គល ស្រឡាញ់គ្នារហូតដល់ចាស់កោងខ្នង ជោគជ័យគ្រប់ភារកិច្ចជីវិត!"</p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-black/40 border border-gold/30 relative">
+                            <div class="flex justify-between items-start">
+                                <h4 class="font-bold text-gold-bright text-xs sm:text-sm">Borey & Family</h4>
+                                <span class="text-[10px] text-pearl/50">1 hour ago</span>
+                            </div>
+                            <p class="text-xs text-pearl/90 mt-1 italic">"Wishing you both a lifetime of love, joy, and eternal prosperity. Big congratulations Sophea & Chantrea!"</p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-black/40 border border-gold/30 relative">
+                            <div class="flex justify-between items-start">
+                                <h4 class="font-bold text-gold-bright text-xs sm:text-sm">កញ្ញា លីដា</h4>
+                                <span class="text-[10px] text-pearl/50">3 hours ago</span>
+                            </div>
+                            <p class="text-xs text-pearl/90 mt-1 italic">"រំភើបជំនួសអាយដលខ្លាំងណាស់! រង់ចាំថ្ងៃសិរីមង្គលមកដល់យ៉ាងអន្ទះសា។"</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 7: ANG PAO / DIGITAL GIFT CORNER (SOMNAK) -->
+    <section id="gift" class="py-16 bg-gradient-to-b from-[#1F0305] via-[#3B070B] to-[#1F0305] relative">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <div class="mb-10">
+                <!-- <span class="text-xs font-semibold uppercase tracking-widest text-gold-light">Digital Somnak & Ang Pao</span> -->
+                <h2 class="font-khmerHeader text-2xl sm:text-3xl gold-text-gradient mt-1">
+                    <span class="lang-km inline-block mt-2">ចំណងដៃឌីជីថល</span>
+                    <span class="lang-en hidden">Digital Wedding Gift</span>
+                </h2>
+                <p class="Dtext-xs text-pearl/80 mt-2 max-w-xl mx-auto">
+                    <span class="lang-km">វត្តមានដ៏ខ្ពង់ខ្ពស់របស់ឯកឧត្តម លោកជំទាវ លោក លោកស្រី គឺជាកិត្តិយសដ៏ធំធេងសម្រាប់គ្រួសារយើងខ្ញុំ។ ប្រសិនបើលោកអ្នកបំណងចងដៃតាមឌីជីថល អាចស្កេន KHQR ខាងក្រោម៖</span>
+                    <span class="lang-en hidden">Your presence at our wedding is the greatest gift of all. Should you wish to honor us with a digital gift, QR options are available below:</span>
+                </p>
+                <div class="w-24 h-1 bg-gradient-to-r from-transparent via-gold to-transparent mx-auto mt-3"></div>
+            </div>
+
+            <!-- Banking Tab Selector -->
+            <div class="flex justify-center gap-3 mb-8">
+                <button onclick="switchBankTab('aba')" id="tab-aba" class="px-6 py-2.5 rounded-full text-xs font-bold transition-all border border-gold bg-gold-gradient text-crimson-900 shadow-gold">
+                    ABA Bank KHQR
+                </button>
+                <!-- <button onclick="switchBankTab('wing')" id="tab-wing" class="px-6 py-2.5 rounded-full text-xs font-bold transition-all border border-gold/40 bg-black/40 text-pearl hover:bg-gold-light/20">
+                    Wing Bank
+                </button> -->
+            </div>
+
+            <!-- QR Display Cards -->
+            <div class="max-w-md mx-auto bg-black/60 backdrop-blur-md rounded-3xl border-2 border-gold/60 p-6 sm:p-8 shadow-2xl relative">
+                
+                <!-- ABA Bank View -->
+                <div id="view-aba" class="space-y-4">
+                    <div class="w-16 h-16 mx-auto bg-blue-900 rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-md border border-gold">
+                        ABA
+                    </div>
+                    <h3 class="font-bold text-pearl text-sm">TO RAMY</h3>
+                    <p class="text-xs text-gold-bright font-mono font-semibold">002 543 334 (USD / KHR)</p>
+                    
+                    <!-- Dynamic KHQR Image Mockup -->
+                    <div class="p-3 bg-white rounded-2xl border border-gold/60 inline-block shadow-inner">
+                        <img src="./img/KHQR.jpg" alt="ABA KHQR Code" class="w-48 h-48 mx-auto rounded-lg">
+                    </div>
+
+                    <div class="flex justify-center gap-3 pt-2">
+                        <button onclick="copyToClipboard('002 543 334')" class="px-4 py-2 rounded-xl bg-gold-gradient text-crimson-900 text-xs font-bold hover:scale-105 transition-all flex items-center gap-1.5 shadow-md">
+                            <i class="fas fa-copy text-crimson-900"></i> Copy Account
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Wing Bank View (Hidden initially) -->
+                <div id="view-wing" class="hidden space-y-4">
+                    <div class="w-16 h-16 mx-auto bg-lime-600 rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-md border border-gold">
+                        WING
+                    </div>
+                    <h3 class="font-bold text-pearl text-sm">LY SOPHEA</h3>
+                    <p class="text-xs text-gold-bright font-mono font-semibold">098 765 432 (USD)</p>
+                    
+                    <div class="p-3 bg-white rounded-2xl border border-gold/60 inline-block shadow-inner">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=WING-WEDDING-GIFT-SOPHEA" alt="Wing QR Code" class="w-48 h-48 mx-auto rounded-lg">
+                    </div>
+
+                    <div class="flex justify-center gap-3 pt-2">
+                        <button onclick="copyToClipboard('098 765 432')" class="px-4 py-2 rounded-xl bg-gold-gradient text-crimson-900 text-xs font-bold hover:scale-105 transition-all flex items-center gap-1.5 shadow-md">
+                            <i class="fas fa-copy text-crimson-900"></i> Copy Account
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 8: PRE-WEDDING PHOTO GALLERY -->
+    <section id="gallery" class="py-16 bg-gradient-to-b from-[#1F0305] via-[#2A0407] to-[#110103] relative border-t border-gold/20">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="text-center mb-10">
+                <span class="text-xs font-semibold uppercase tracking-widest text-gold-light">Pre-wedding Moments</span>
+                <h2 class="font-khmerHeader text-2xl sm:text-3xl gold-text-gradient mt-1">
+                    <span class="lang-km">រូបថតមុនអាពាហ៍ពិពាហ៍</span>
+                    <span class="lang-en hidden">Pre-wedding Photo Gallery</span>
+                </h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-transparent via-gold to-transparent mx-auto mt-3"></div>
+            </div>
+
+            <!-- Responsive Gallery Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                
+                <!-- Image Card 1 -->
+                <div class="relative group overflow-hidden rounded-2xl border-2 border-gold/40 shadow-lg aspect-[3/4] cursor-pointer" onclick="openLightbox('https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80')">
+                    <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=600&q=80" alt="Prewedding 1" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-crimson-900/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                        <span class="text-xs text-gold-bright font-semibold"><i class="fas fa-search-plus mr-1"></i> View Photo</span>
+                    </div>
+                </div>
+
+                <!-- Image Card 2 -->
+                <div class="relative group overflow-hidden rounded-2xl border-2 border-gold/40 shadow-lg aspect-[3/4] cursor-pointer" onclick="openLightbox('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80')">
+                    <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=600&q=80" alt="Prewedding 2" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-crimson-900/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                        <span class="text-xs text-gold-bright font-semibold"><i class="fas fa-search-plus mr-1"></i> View Photo</span>
+                    </div>
+                </div>
+
+                <!-- Image Card 3 -->
+                <div class="relative group overflow-hidden rounded-2xl border-2 border-gold/40 shadow-lg aspect-[3/4] cursor-pointer" onclick="openLightbox('https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=80')">
+                    <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=600&q=80" alt="Prewedding 3" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-crimson-900/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                        <span class="text-xs text-gold-bright font-semibold"><i class="fas fa-search-plus mr-1"></i> View Photo</span>
+                    </div>
+                </div>
+
+                <!-- Image Card 4 -->
+                <div class="relative group overflow-hidden rounded-2xl border-2 border-gold/40 shadow-lg aspect-[3/4] cursor-pointer" onclick="openLightbox('https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=800&q=80')">
+                    <img src="https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=600&q=80" alt="Prewedding 4" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-crimson-900/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                        <span class="text-xs text-gold-bright font-semibold"><i class="fas fa-search-plus mr-1"></i> View Photo</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Thank You / Appreciation Section -->
+    <section id="thank-you" class="px-5 py-16 bg-gradient-to-b from-[#1F0305] via-[#2A0407] to-[#110103] relative border-t border-gold/20 text-center">
+        <!-- Background Ambient Glow -->
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-weddingGold/10 via-transparent to-transparent pointer-events-none"></div>
+
+        <div class="max-w-2xl mx-auto relative z-10">
+            
+            <!-- Top Decorative Divider -->
+            <div class="mb-6 flex justify-center items-center gap-3">
+                <div class="h-[1px] w-20 bg-gradient-to-r from-transparent to-weddingGold"></div>
+                <i class="fas fa-heart text-weddingGold animate-pulse text-xl"></i>
+                <div class="h-[1px] w-20 bg-gradient-to-l from-transparent to-weddingGold"></div>
+            </div>
+
+            <!-- Section Title (Khmer Moul Font) -->
+            <h2 class="font-moul text-2xl md:text-3xl mb-6 gold-text-gradient">
+                <span class="lang-km">អរគុណដ៏ជ្រាលជ្រៅ</span>
+                <span class="lang-en hidden">Profound Gratitude</span>
+            </h2>
+
+            <!-- Traditional Khmer Appreciation Message -->
+            <p class="text-sm text-pearl/80 mt-2 max-w-xl mx-auto mb-6">
+                <span class="lang-km">វត្តមានដ៏ខ្ពង់ខ្ពស់ និងសេចក្តីស្រឡាញ់ដ៏កក់ក្តៅរបស់លោកអ្នក គឺជាកិត្តិយសដ៏ធំធេង និងជាការចងចាំដ៏មានតម្លៃបំផុតសម្រាប់ក្រុមគ្រួសារយើងខ្ញុំទាំងពីរ។ យើងខ្ញុំសូមថ្លែងអំណរគុណយ៉ាងជ្រាលជ្រៅ និងសូមជូនពរឱ្យលោកអ្នកទទួលបាននូវសុខភាពល្អ និងសុភមង្គលគ្រប់ពេលវេលា។</span>
+                <span class="lang-en hidden">"Thank you from the bottom of our hearts for sharing in our joy, celebrating our special day, and bestowing your kind blessings upon us."</span>
+            </p>
+
+
+            <!-- English Subtitle Version -->
+            <!-- <p class="lang-en text-sm text-pearl/80 mt-2 max-w-xl mx-auto mb-8">
+                
+            </p> -->
+
+            <!-- Couple Sign-off -->
+            <div class="font-moul text-weddingGold text-lg md:text-xl tracking-wider mb-2">
+                <span class="lang-km">សុឃាន & រ៉ាម៉ី</span>
+                <span class="lang-en hidden">Sokhean & Ramy</span>
+            
+                
+            </div>
+
+        </div>
+    </section>
+
+    <!-- LIGHTBOX MODAL -->
+    <div id="lightbox" class="fixed inset-0 z-50 bg-black/90 hidden items-center justify-center p-4" onclick="closeLightbox()">
+        <button class="absolute top-6 right-6 text-white text-3xl hover:text-gold transition-colors" onclick="closeLightbox()">&times;</button>
+        <img id="lightboxImg" src="" alt="Enlarged gallery image" class="max-w-full max-h-[85vh] rounded-xl border-2 border-gold shadow-2xl" onclick="event.stopPropagation()">
+    </div>D
+
+    <!-- FOOTER SECTION -->
+    <!-- <footer class="bg-crimson-900 text-gold py-12 border-t-2 border-gold text-center relative overflow-hidden">
+        <div class="max-w-4xl mx-auto px-4 relative z-10 space-y-4">
+            <div class="w-12 h-12 rounded-full bg-pearl border-2 border-gold mx-auto flex items-center justify-center text-crimson text-lg shadow-md">
+                S&C
+            </div>
+            <h3 class="font-khmerHeader text-xl text-gold-light">សុភ័ក្ត & ចន្ទ្រា</h3>
+            <p class="text-xs text-pearl/80 max-w-md mx-auto">
+                <span class="lang-km">សូមថ្លែងអំណរគុណយ៉ាងជ្រាលជ្រៅចំពោះវត្តមាន និងពរជ័យដ៏ឧត្តុង្គឧត្តមរបស់ឯកឧត្តម លោកជំទាវ លោក លោកស្រី!</span>
+                <span class="lang-en hidden">Thank you heartfeltly for being a cherished part of our wedding day!</span>
+            </p>
+
+            <div class="pt-6 border-t border-gold/20 text-[11px] text-pearl/60">
+                &copy; 2026 Sophea & Chantrea Wedding | Modern Khmer E-Invitation
+            </div>
+        </div>
+    </footer> -->
+
+    <!-- JAVASCRIPT INTERACTIVE CONTROLS -->
+    <script>
+        const client = new Appwrite.Client();
+
+        client
+            .setEndpoint('https://sfo.cloud.appwrite.io/v1') // Your Appwrite API Endpoint
+            .setProject('6ae559d9001ac6c5991a');            // Your Project ID
+
+        const databases = new Appwrite.Databases(client);
+
+        // Configuration IDs
+        const DATABASE_ID = '6ae55a1f0003a8db9a45';
+        const COLLECTION_ID = '6ae55a3400080b06352d';
+
+        /**
+         * Fetch records from Appwrite Database Collection
+         */
+        async function fetchAppData() {
+            try {
+                const response = await databases.listDocuments(
+                    DATABASE_ID,
+                    COLLECTION_ID,
+                    [
+                        // Optional Query filters, e.g., sort by newest created
+                        Appwrite.Query.orderDesc('$createdAt'),
+                        Appwrite.Query.limit(50)
+                    ]
+                );
+
+                console.log("Fetched records successfully:", response.documents);
+                return response.documents; // Returns an array of document objects
+
+            } catch (error) {
+                console.error("Error fetching data from Appwrite:", error.message);
+                return [];
+            }
+        }
+        fetchAppData()
+
+        //WRITE DATE TO DB
+        async function writeDataToAppwrite(guestName, attendance, sessionType, guestCount, guestMessage) {
+            console.log(parseInt(guestCount,10))
+
+        try {
+            const response = await databases.createDocument(
+                DATABASE_ID,
+                COLLECTION_ID,
+                Appwrite.ID.unique(), // Generates a unique random ID for the document
+                {
+                    // These keys MUST match your Attribute keys in your Appwrite Collection!
+                    Name: guestName,
+                    Attendee: attendance,
+                    PNumber: guestCount,
+                    TimeAttendee: sessionType,
+                    Message: guestMessage,
+                    // createdAt: new Date().toISOString(),
+                    // updatedAt: new Date().toISOString()
+                }
+            );
+
+            // console.log("Data successfully written to Appwrite:", response);
+            
+            // Reset form
+            document.getElementById('rsvpForm').reset();
+
+            // Feedback Toast Notice
+            showToast("សារជូនពររបស់អ្នកត្រូវបានរក្សាទុកដោយជោគជ័យ! សូមអរគុណ!");
+            return response;
+
+        } catch (error) {
+            console.error("Error writing data to Appwrite:", error.message);
+            alert("Failed to submit: " + error.message);
+        }
+    }
+
+        /* 1. LANGUAGE TOGGLE LOGIC */
+        let currentLang = 'km';
+        function toggleLanguage() {
+            currentLang = currentLang === 'km' ? 'en' : 'km';
+            document.getElementById('langLabel').innerText = currentLang === 'km' ? 'EN' : 'ខ្មែរ';
+
+            const kmElements = document.querySelectorAll('.lang-km');
+            const enElements = document.querySelectorAll('.lang-en');
+
+            if (currentLang === 'en') {
+                kmElements.forEach(el => el.classList.add('hidden'));
+                enElements.forEach(el => el.classList.remove('hidden'));
+            } else {
+                enElements.forEach(el => el.classList.add('hidden'));
+                kmElements.forEach(el => el.classList.remove('hidden'));
+            }
+        }
+
+        /* 2. MOBILE MENU DRAWER TOGGLE */
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        /* 3. AUDIO PLAYER CONTROL & SYNTHESIZER FALLBACK */
+        let isPlaying = false;
+        const audio = document.getElementById('weddingAudio');
+        const musicIcon = document.getElementById('musicIcon');
+
+        function toggleAudio() {
+            if (isPlaying) {
+                audio.pause();
+                musicIcon.className = "fas fa-music text-base";
+                isPlaying = false;
+            } else {
+                audio.play().then(() => {
+                    musicIcon.className = "fas fa-compact-disc text-base animate-spin text-gold";
+                    isPlaying = true;
+                }).catch(() => {
+                    // Soft alert on browser autoplay policy restrict
+                    showToast("Click audio button again to play music!");
+                });
+            }
+        }
+
+        /* 4. COUNTDOWN TIMER CALCULATOR */
+        const weddingDate = new Date("December 8, 2026 07:00:00").getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = weddingDate - now;
+
+            if (distance < 0) {
+                document.getElementById("cd-days").innerText = "00";
+                document.getElementById("cd-hours").innerText = "00";
+                document.getElementById("cd-minutes").innerText = "00";
+                document.getElementById("cd-seconds").innerText = "00";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("cd-days").innerText = days < 10 ? '0' + days : days;
+            document.getElementById("cd-hours").innerText = hours < 10 ? '0' + hours : hours;
+            document.getElementById("cd-minutes").innerText = minutes < 10 ? '0' + minutes : minutes;
+            document.getElementById("cd-seconds").innerText = seconds < 10 ? '0' + seconds : seconds;
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        /* 5. RSVP FORM SUBMISSION & BLESSING WALL ADDITION */
+        let totalWishes = 3;
+        function handleRSVPSubmit(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('guestName').value;
+            const attendance = document.getElementById('attendance').value;
+            const guestCount = document.getElementById('guestCount').value;
+            const sessionType = document.getElementById('sessionType').value;
+            const message = document.getElementById('blessingMsg').value;
+
+            if(!name || !message) return;
+
+            // Trigger Celebration Confetti Blast
+            if(typeof confetti === 'function') {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#D4AF37', '#8B0000', '#FFD700']
+                });
+            }
+            writeDataToAppwrite(name,attendance,sessionType,parseInt(guestCount,10),message)
+
+            // Create new Blessing Card dynamically
+            // const container = document.getElementById('blessingsContainer');
+            // const newCard = document.createElement('div');
+            // newCard.className = "p-4 rounded-xl bg-black/40 border border-gold/50 animate-fadeIn relative";
+            // newCard.innerHTML = `
+            //     <div class="flex justify-between items-start">
+            //         <h4 class="font-bold text-gold-bright text-xs sm:text-sm">${escapeHtml(name)}</h4>
+            //         <span class="text-[10px] text-pearl/50">Just now</span>
+            //     </div>
+            //     <p class="text-xs text-pearl/90 mt-1 italic">"${escapeHtml(message)}"</p>
+            // `;
+
+            // container.prepend(newCard);
+
+            // totalWishes++;
+            // document.getElementById('wishCount').innerText = `${totalWishes} Wishes`;
+
+        }
+
+        function escapeHtml(text) {
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+
+        function showToast(msg) {
+            const toast = document.createElement('div');
+            toast.className = "fixed bottom-6 right-6 z-50 bg-gold-gradient text-crimson-900 border border-gold px-6 py-3 rounded-xl shadow-2xl text-xs font-bold animate-bounce";
+            toast.innerText = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+
+        /* 6. GIFT CORNER TAB SWITCHER */
+        function switchBankTab(type) {
+            const abaTab = document.getElementById('tab-aba');
+            const wingTab = document.getElementById('tab-wing');
+            const abaView = document.getElementById('view-aba');
+            const wingView = document.getElementById('view-wing');
+
+            if(type === 'aba') {
+                abaTab.className = "px-6 py-2.5 rounded-full text-xs font-bold transition-all border border-gold bg-gold-gradient text-crimson-900 shadow-gold";
+                wingTab.className = "px-6 py-2.5 rounded-full text-xs font-bold transition-all border border-gold/40 bg-black/40 text-pearl hover:bg-gold-light/20";
+                abaView.classList.remove('hidden');
+                wingView.classList.add('hidden');
+            } else {
+                wingTab.className = "px-6 py-2.5 rounded-full text-xs font-bold transition-all border border-gold bg-gold-gradient text-crimson-900 shadow-gold";
+                abaTab.className = "px-6 py-2.5 rounded-full text-xs font-bold transition-all border border-gold/40 bg-black/40 text-pearl hover:bg-gold-light/20";
+                wingView.classList.remove('hidden');
+                abaView.classList.add('hidden');
+            }
+        }
+
+        /* 7. COPY TO CLIPBOARD HELPER */
+        function copyToClipboard(text) {
+            const tempInput = document.createElement('input');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            showToast(`បានចម្លងលេខគណនី: ${text}`);
+        }
+
+        /* 8. LIGHTBOX GALLERY MODAL */
+        function openLightbox(src) {
+            document.getElementById('lightboxImg').src = src;
+            document.getElementById('lightbox').classList.remove('hidden');
+            document.getElementById('lightbox').classList.add('flex');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.add('hidden');
+            document.getElementById('lightbox').classList.remove('flex');
+        }
+
+        /* 9. FLOATING GOLDEN PARTICLES CANVAS EFFECT */
+        const canvas = document.getElementById("particleCanvas");
+        const ctx = canvas.getContext("2d");
+
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+        }
+        window.addEventListener("resize", resizeCanvas);
+        resizeCanvas();
+
+        const particles = Array.from({ length: 40 }, () => ({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            radius: Math.random() * 2.5 + 1,
+            color: `rgba(212, 175, 55, ${Math.random() * 0.6 + 0.2})`,
+            speedY: Math.random() * 0.6 + 0.2,
+            speedX: Math.random() * 0.4 - 0.2
+        }));
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.y -= p.speedY;
+                p.x += p.speedX;
+
+                if (p.y < 0) p.y = canvas.height;
+                if (p.x < 0 || p.x > canvas.width) p.x = Math.random() * canvas.width;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.fill();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+    </script>
+</body>
+</html>
+
